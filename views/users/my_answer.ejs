@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <title>Ankieta</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light border mb-5">
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="navbar-nav">
+            <a class="nav-item nav-link" href="/users/survey">Ankieta</a>
+            <a class="nav-item nav-link" href="/users/results">Wyniki</a>
+            <a class="navbar-brand" href="/users/my_answers">Moje odpowiedzi</a>
+            <a class="nav-item nav-link" href="/users/logout">Wyloguj</a>
+          </div>
+        </div>
+      </nav>
+    <div class="container">
+        <h1>Twoje (<a style="color:blue"><%=answer.email %></a>) odpowiedzi:</h1>
+        <h4>Ile ma pan/pani dzieci?</h4>
+            <div class="form-check">
+                <% if (answer.first_answer === 0){ %>
+                <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="0"
+                    checked >
+                    <% } else{ %>  
+                        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="0"
+                    disabled>
+                    <% } %>
+                <label class="form-check-label" for="exampleRadios1">
+                    0
+                </label>
+            </div>
+            <div class="form-check">
+                <% if (answer.first_answer === 1){ %>
+                <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="1" checked >
+                <% } else{ %>  
+                    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="1"
+                disabled>
+                <% } %>
+                <label class="form-check-label" for="exampleRadios2">
+                    1-2
+                </label>
+            </div>
+            <div class="form-check disabled">
+                <% if (answer.first_answer === 2){ %>
+                <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios3" value="2"  checked>
+                <% } else{ %>  
+                    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios3" value="2"
+                disabled>
+                <% } %>
+                <label class="form-check-label" for="exampleRadios3">
+                    3+
+                </label>
+            </div>
+            <h4>Facebook, Twitter czy Albicla?</h4>
+            <div class="form-check">
+                <% if (answer.second_answer === 0){ %>
+                <input class="form-check-input" type="radio" name="exampleRadios1" id="exampleRadios4" value="0" 
+                    checked>
+                    <% } else{ %>  
+                        <input class="form-check-input" type="radio" name="exampleRadios1" id="exampleRadios4" value="0"
+                    disabled>
+                    <% } %>
+                <label class="form-check-label" for="exampleRadios4">
+                    Facebook
+                </label>
+            </div>
+            <div class="form-check">
+                <% if (answer.second_answer === 1){ %>
+                <input class="form-check-input" type="radio" name="exampleRadios1" id="exampleRadios5" value="1"  checked>
+                <% } else{ %>  
+                    <input class="form-check-input" type="radio" name="exampleRadios1" id="exampleRadios5" value="1" 
+                disabled>
+                <% } %>
+                <label class="form-check-label" for="exampleRadios5">
+                    Twitter
+                </label>
+            </div>
+            <div class="form-check">
+                <% if (answer.second_answer === 2){ %>
+                <input class="form-check-input" type="radio" name="exampleRadios1" id="exampleRadios6" value="2"  checked>
+                <% } else{ %>  
+                    <input class="form-check-input" type="radio" name="exampleRadios1" id="exampleRadios6" value="2" 
+                disabled>
+                <% } %>
+                <label class="form-check-label" for="exampleRadios5">
+                    Albicla
+                </label>
+            </div>
+            <h4>Jakie jest Pańskie/Pani wykształcenie</h4>
+            <div class="form-check">
+                <% if (answer.third_answer === 0){ %>
+                <input class="form-check-input" type="radio" name="exampleRadios2" id="exampleRadios7" value="0" 
+                    checked>
+                    <% } else{ %>  
+                        <input class="form-check-input" type="radio" name="exampleRadios2" id="exampleRadios7" value="0" 
+                    disabled>
+                    <% } %>
+                <label class="form-check-label" for="exampleRadios7">
+                    Podstawowe
+                </label>
+            </div>
+            <div class="form-check">
+                <% if (answer.third_answer === 1){ %>
+                <input class="form-check-input" type="radio" name="exampleRadios2" id="exampleRadios8" value="1"  checked>
+                <% } else{ %>  
+                    <input class="form-check-input" type="radio" name="exampleRadios2" id="exampleRadios8" value="1" 
+                disabled>
+                <% } %>
+                <label class="form-check-label" for="exampleRadios8">
+                    Średnie
+                </label>
+            </div>
+            <div class="form-check disabled">
+                <% if (answer.third_answer === 2){ %>
+                <input class="form-check-input" type="radio" name="exampleRadios2" id="exampleRadios9" value="2" checked>
+                <% } else{ %>  
+                    <input class="form-check-input" type="radio" name="exampleRadios2" id="exampleRadios9" value="2" 
+                disabled>
+                <% } %>
+                <label class="form-check-label" for="exampleRadios9">
+                    Wyższe
+                </label>
+            </div>
+    </div>
+    <script src="../../assets/js/vendor/popper.min.js"></script>
+    <script src="../../dist/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/vendor/holder.min.js"></script>
+</body>
+
+</html>

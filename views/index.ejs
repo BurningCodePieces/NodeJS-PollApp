@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+  <title>Ankieta</title>
+  <script>
+    mark_answers = function (x, y, z) {
+      if (x == 0)
+        document.getElementById('exampleRadios10').checked = true;
+      else if (x == 1)
+        document.getElementById('exampleRadios20').checked = true;
+      else
+        document.getElementById('exampleRadios30').checked = true;
+      if (y == 0)
+        document.getElementById('exampleRadios40').checked = true;
+      else if (y == 1)
+        document.getElementById('exampleRadios50').checked = true;
+      else
+        document.getElementById('exampleRadios60').checked = true;
+      if (z == 0)
+        document.getElementById('exampleRadios70').checked = true;
+      else if (z == 1)
+        document.getElementById('exampleRadios80').checked = true;
+      else { document.getElementById('exampleRadios90').checked = true; }
+    }
+
+
+    let network_connection = 1;
+    window.addEventListener("online", function () { network_connection = 1; document.getElementById("info").style.display = "none"; document.getElementById("a1").style.display = "none" });
+    window.addEventListener("offline", function () { network_connection = 0; document.getElementById("info").style.display = "block" });
+
+    function saveToIndexedDB() {
+      window.indexedDB = window.mozIndexedDB;
+      if (network_connection == 0) {
+        if (!window.indexedDB) {
+          alert("Nie udało się załadować lokalnej bazy danych :/")
+        }
+        else {
+          let request = window.indexedDB.open("AnswerDatabase2", 1),
+            db, tx, store, index;
+
+          request.onupgradeneeded = function (e) {
+            let db = request.result;
+            let store = db.createObjectStore("AnswerStore2", { keyPath: "ID" })
+            index = store.createIndex("ID", "ID", { unique: true })
+          }
+
+          request.onerror = function (e) {
+            console.log("Error: " + e.target.errorCode);
+          }
+          request.onsuccess = function (e) {
+            db = request.result;
+            tx = db.transaction("AnswerStore2", "readwrite");
+            store = tx.objectStore("AnswerStore2");
+            index = store.index("ID");
+
+            db.onerror = function (e) {
+              console.log("Error: " + e.target.errorCode);
+            }
+
+            var input1 = document.forms["myForm"]['exampleRadios'].value;
+            var input2 = document.forms["myForm"]['exampleRadios1'].value;
+            var input3 = document.forms["myForm"]['exampleRadios2'].value;
+
+            store.put({ ID: 1, firstAnswer: input1, secondAnswer: input2, thirdAnswer: input3 })
+            let a1 = index.get(1);
+
+            a1.onsuccess = function () {
+              alert("W lokalnej bazie zapisano odpowiedzi o indeksach: " + a1.result.firstAnswer + " " + a1.result.secondAnswer + " " + a1.result.thirdAnswer + ". Aby przesłać odpowiedzi na serwer, upewnij się, że jesteś połączony z siecią i kliknij zielony przycisk. (kliknięcie niebieskiego wyśle dane z formularza, nie z bazy lokalnej!)")
+              document.getElementById("h6").style.visibility = "visible"
+              document.getElementById("s3").style.display = "block"
+
+
+              tx.oncomplete = function () {
+                db.close();
+              }
+            }
+          }
+
+          return false;
+        }
+      }
+      else {
+        return true;
+      }
+    }
+
+    
+      function readIndexedDBandSend() {
+        if (network_connection == 1) {
+          window.indexedDB = window.mozIndexedDB;
+          if (!window.indexedDB) {
+            alert("Nie udało się załadować lokalnej bazy danych :/")
+          }
+          else {
+            let request = window.indexedDB.open("AnswerDatabase2", 1),
+              db, tx, store, index;
+
+            request.onupgradeneeded = function (e) {
+              let db = request.result;
+              let store = db.createObjectStore("AnswerStore2", { keyPath: "ID" })
+              index = store.createIndex("ID", "ID", { unique: true })
+            }
+
+            request.onerror = function (e) {
+              console.log("Error: " + e.target.errorCode);
+            }
+            request.onsuccess = function (e) {
+              db = request.result;
+              tx = db.transaction("AnswerStore2", "readwrite");
+              store = tx.objectStore("AnswerStore2");
+              index = store.index("ID");
+
+              db.onerror = function (e) {
+                console.log("Error: " + e.target.errorCode);
+              }
+              let a1 = index.get(1);
+
+            
+
+              a1.onsuccess = function () {
+                x = a1.result.firstAnswer;
+                y = a1.result.secondAnswer;
+                z = a1.result.thirdAnswer;
+                alert("Z lokalnej bazy odczytano odpowiedzi o indeksach: " + a1.result.firstAnswer + " " + a1.result.secondAnswer + " " + a1.result.thirdAnswer + ". Zostają one wysłane do bazy globalnej. Po wysłaniu zostaną usunięte z bazy lokalnej.")
+                mark_answers(x, y, z);
+                store.delete(1);
+                document.forms['myForm'].submit();
+
+
+                tx.oncomplete = function () {
+                  db.close();
+                }
+
+              }
+
+            }
+          }
+          return false;
+        }
+        else {
+          document.getElementById("a1").style.visibility = "visible"
+        }
+      }
+      function readIndexedDB() {
+       
+       window.indexedDB = window.mozIndexedDB;
+       if (!window.indexedDB) {
+         alert("Nie udało się załadować lokalnej bazy danych :/")
+       }
+       else {
+         let request = window.indexedDB.open("AnswerDatabase2", 1),
+           db, tx, store, index;
+
+         request.onupgradeneeded = function (e) {
+           let db = request.result;
+           let store = db.createObjectStore("AnswerStore2", { keyPath: "ID" })
+           index = store.createIndex("ID", "ID", { unique: true })
+         }
+
+         request.onerror = function (e) {
+           console.log("Error: " + e.target.errorCode);
+         }
+         request.onsuccess = function (e) {
+           db = request.result;
+           tx = db.transaction("AnswerStore2", "readwrite");
+           store = tx.objectStore("AnswerStore2");
+           index = store.index("ID");
+
+           db.onerror = function (e) {
+             console.log("Error: " + e.target.errorCode);
+           }
+
+           let a1 = index.get(1);
+
+           a1.onsuccess = function () {
+             try{
+             x = a1.result.firstAnswer;
+             y = a1.result.secondAnswer;
+             z = a1.result.thirdAnswer;
+             alert("Z lokalnej bazy odczytano odpowiedzi o indeksach: " + a1.result.firstAnswer + " " + a1.result.secondAnswer + " " + a1.result.thirdAnswer + ". Zostaną one zaznaczone na formularzu.")
+             mark_answers(x, y, z);
+             tx.oncomplete = function () {
+               db.close();}
+             }
+             catch (e)
+             {
+               alert("W lokalnej bazie nie ma (jeszcze) nic :)")
+               tx.oncomplete = function () {
+               db.close();
+               }
+             }
+             
+             }
+           
+          
+           
+         }
+     }
+   }
+  </script>
+
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light border mb-5">
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a id="link1" class="navbar-brand" href="/users/survey">Ankieta</a>
+        <a id="link4" class="nav-item nav-link" href="/users/results">Wyniki</a>
+        <a id="link5" class="nav-item nav-link" href="/users/my_answers">Moje odpowiedzi</a>
+        <a id="link6" class="nav-item nav-link" href="/users/logout">Wyloguj</a>
+
+      </div>
+    </div>
+  </nav>
+  <div class="container">
+    <h1>Weź udział w naszej ankiecie</h1>
+    <small class="text-muted"> Jesli z jakiegos powodu utracisz polaczenie z internetem, dane zostana zapisane w bazie lokalnej. </small><br>
+    <small> Przed wysłaniem ankiety dobrze się zastanów - możesz wysłać tylko jedną z jednego adresu email.</small><br><br>
+    <a id="i1"><button onclick="readIndexedDB()" class="btn btn-primary mb-3">
+        Załaduj odpowiedzi z IndexedDB</button></a><a id="s3" style="display:none"><button
+        onclick="return readIndexedDBandSend()" class="btn btn-success">Lub
+        zsynchronizuj
+        dane z trybu offline</button><a class="text-danger" id="info" style="display:none"> Jesteś w trybie offline.
+      </a> </a>
+    <a id="a1" style="visibility:hidden" class="text-danger">Najpierw połącz się z siecią.</a>
+    <br>
+    <h2>Pytania</h2>
+    <form name="myForm" method="POST" onsubmit="return saveToIndexedDB()">
+      <h4>Ile ma Pan/Pani dzieci?</h4>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios10" value="0" checked>
+        <label class="form-check-label" for="exampleRadios10">
+          0
+        </label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios20" value="1">
+        <label class="form-check-label" for="exampleRadios20">
+          1-2
+        </label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios30" value="2">
+        <label class="form-check-label" for="exampleRadios30">
+          3+
+        </label>
+      </div>
+      <h4>Facebook, Twitter czy Albicla?</h4>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="exampleRadios1" id="exampleRadios40" value="0" checked>
+        <label class="form-check-label" for="exampleRadios40">
+          Facebook
+        </label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="exampleRadios1" id="exampleRadios50" value="1">
+        <label class="form-check-label" for="exampleRadios50">
+          Twitter
+        </label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="exampleRadios1" id="exampleRadios60" value="2">
+        <label class="form-check-label" for="exampleRadios60">
+          Albicla
+        </label>
+      </div>
+      <h4>Jakie jest Pana/Pani wykształcenie?</h4>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="exampleRadios2" id="exampleRadios70" value="0" checked>
+        <label class="form-check-label" for="exampleRadios70">
+          Podstawowe
+        </label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="exampleRadios2" id="exampleRadios80" value="1">
+        <label class="form-check-label" for="exampleRadios80">
+          Średnie
+        </label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="exampleRadios2" id="exampleRadios90" value="2">
+        <label class="form-check-label" for="exampleRadios90">
+          Wyższe
+        </label>
+      </div>
+      <button type="submit" class="btn btn-primary">Wyślij</button>
+    </form>
+    <h6 id="h6" class="text-success" style="visibility:hidden"> Poprawnie zapisano dane do bazy. </h6>
+  </div>
+</body>
+
+</html>

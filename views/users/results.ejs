@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <title>Wyniki ankiety</title>
+    <head>
+        <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+        <script type="text/javascript">
+        
+        window.onload = function () {
+            var chart = new CanvasJS.Chart("chartContainer", {
+                title:{
+                    text: "Ile ma Pan/Pani dzieci?"              
+                },
+                data: [              
+                {
+                    type: "column",
+                    dataPoints: [
+                        { label: "0",  y: <%= result[0] %>  },
+                        { label: "1-2", y: <%= result[1] %>  },
+                        { label: "3+", y: <%= result[2] %>  },
+
+                    ]
+                }
+                ]
+            });
+            chart.render();
+
+            var chart2 = new CanvasJS.Chart("chartContainer2", {
+                title:{
+                    text: "Facebook, Twitter czy Albicla?"              
+                },
+                data: [              
+                {
+                    type: "column",
+                    dataPoints: [
+                        { label: "0",  y: <%= result[3] %> },
+                        { label: "1-2", y: <%= result[4] %>  },
+                        { label: "3+", y: <%= result[5] %>  },
+
+                    ]
+                }
+                ]
+            });
+            chart2.render();
+
+            var chart3 = new CanvasJS.Chart("chartContainer3", {
+                title:{
+                    text: "Jakie jest Pana/Pani wykształcenie?"              
+                },
+                data: [              
+                {
+                    // Change type to "doughnut", "line", "splineArea", etc.
+                    type: "column",
+                    dataPoints: [
+                        { label: "0",  y: <%= result[6] %>  },
+                        { label: "1-2", y: <%= result[7] %>  },
+                        { label: "3+", y: <%= result[8] %>  },
+
+                    ]
+                }
+                ]
+            });
+            chart3.render();
+        }
+        </script>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light border mb-5">
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="navbar-nav">
+            <a class="nav-item nav-link" href="/users/survey">Ankieta</a>
+            <a class="navbar-brand" href="/users/results">Wyniki</a>
+            <a class="nav-item nav-link" href="/users/my_answers">Moje odpowiedzi</a>
+            <a class="nav-item nav-link" href="/users/logout">Wyloguj</a>
+
+        <!-- <a class="nav-item nav-link disabled" href="#">Disabled</a>-->   
+          </div>
+        </div>
+      </nav>
+    <div class="container text-center">
+        <h1>Wyniki ankiet</h1>
+    </div>
+    <div id="chartContainer" style="height: 300px; width: 60%; margin-left:20%; margin-top:3%"></div>
+    <div id="chartContainer2" style="height: 300px; width: 60%; margin-left:20%; margin-top:3%"></div>
+    <div id="chartContainer3" style="height: 300px; width: 60%; margin-left:20%; margin-top:3%"></div>
+    <script src="../../assets/js/vendor/popper.min.js"></script>
+    <script src="../../dist/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/vendor/holder.min.js"></script>
+</body>
+
+</html>
